@@ -16,30 +16,24 @@ except FileNotFoundError:
 
 st.subheader("📊 Live Sensor Inputs")
 
-# 3. Interactive Web Sliders (Ranges chosen based on typical FD001 engine values)
+# 3. Interactive Web Sliders
 sensor_2 = st.slider("Sensor 2 (Core Temperature)", min_value=640.0, max_value=645.0, value=642.5, step=0.1)
 sensor_3 = st.slider("Sensor 3 (Bypass Ratio)", min_value=1580.0, max_value=1610.0, value=1590.0, step=0.5)
 sensor_4 = st.slider("Sensor 4 (Total Pump Pressure)", min_value=1390.0, max_value=1430.0, value=1405.0, step=0.5)
 
-# 4. Construct the Full 14-Feature Input Array
-# Because we dropped 7 dead columns earlier (leaving 14 features out of the 21 sensors/settings), 
-# we construct an array of the 14 remaining active variables.
-# We populate it with baseline averages so the linear math equation doesn't explode.
+# 4. Construct the Full 21-Feature Input Array to match your trained model
+# This builds a full baseline array of typical averages for all 21 active sensor/setting slots
 inputs = np.array([
-    sensor_2,   # Sensor 2 (Active Slider)
-    sensor_3,   # Sensor 3 (Active Slider)
-    sensor_4,   # Sensor 4 (Active Slider)
-    553.5,      # Sensor 7 Average
-    2388.0,     # Sensor 8 Average
-    9050.0,     # Sensor 9 Average
-    47.5,       # Sensor 11 Average
-    521.8,      # Sensor 12 Average
-    2388.0,     # Sensor 13 Average
-    8135.0,     # Sensor 14 Average
-    8.4,        # Sensor 15 Average
-    392.0,      # Sensor 17 Average
-    39.0,       # Sensor 20 Average
-    23.3        # Sensor 21 Average
+    0.02, 0.003, 100.0,     # Settings 1, 2, 3
+    642.5,                  # Sensor 1
+    sensor_2,               # Sensor 2 (Active Slider)
+    sensor_3,               # Sensor 3 (Active Slider)
+    sensor_4,               # Sensor 4 (Active Slider)
+    553.5, 2388.0, 9050.0,  # Sensors 5, 6, 7
+    1.3, 47.5, 521.8,       # Sensors 8, 9, 10
+    2388.0, 8135.0, 8.4,    # Sensors 11, 12, 13
+    0.03, 392.0, 2388.0,    # Sensors 14, 15, 16
+    100.0, 39.0, 23.3       # Sensors 17, 18, 19
 ])
 
 # 5. Prediction Execution
@@ -55,4 +49,3 @@ if st.button("🔮 Calculate Remaining Useful Life"):
         st.warning(f"⚠️ SCHEDULE MAINTENANCE SOON: Only {predicted_value} flight cycles remaining.")
     else:
         st.success(f"✅ ENGINE HEALTHY: Predicted Remaining Useful Life is {predicted_value} flight cycles.")
-
