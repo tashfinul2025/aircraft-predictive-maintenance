@@ -41,7 +41,7 @@ inputs = np.array(base_values + default_padding[:needed_padding])
 if st.button("🔮 Calculate Remaining Useful Life"):
     # Reshape the 1D array into a 2D row format required by Scikit-Learn
     prediction = model.predict(inputs.reshape(1, -1))
-    predicted_value = int(prediction)
+    predicted_value = int(prediction[0])
     
     # Render Output Metrics based on threshold conditions
     if predicted_value <= 0:
